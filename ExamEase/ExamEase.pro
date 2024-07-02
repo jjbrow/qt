@@ -1,4 +1,4 @@
-QT       += core gui dbus sql
+QT       += core gui sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -16,25 +16,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     databaseutils.cpp \
-    login.cpp \
     main.cpp \
     mainwindow.cpp \
-    readinglogs.cpp \
-    updateuser.cpp \
-    user.cpp
+    paper.cpp \
+    question.cpp
 
 HEADERS += \
     databaseutils.h \
-    login.h \
     mainwindow.h \
-    readinglogs.h \
-    updateuser.h \
-    user.h
+    paper.h \
+    question.h
 
 FORMS += \
-    login.ui \
-    mainwindow.ui \
-    updateuser.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

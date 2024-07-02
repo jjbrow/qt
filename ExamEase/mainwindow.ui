@@ -6,78 +6,72 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>759</width>
-    <height>536</height>
+    <width>711</width>
+    <height>521</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>LogService</string>
+   <string>ExamEase</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">font: 10pt &quot;微软雅黑&quot;;
+background-color: rgb(249, 249, 249);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QWidget" name="widget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QTextBrowser" name="textBrowser"/>
-       </item>
-       <item>
-        <widget class="QWidget" name="widget_2" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QPushButton" name="cease">
-            <property name="text">
-             <string>停止</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="widget_3" native="true">
-            <widget class="QLabel" name="stateLabel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>0</y>
-               <width>51</width>
-               <height>31</height>
-              </rect>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="0" stdset="0">
-    <string/>
-   </property>
+   <widget class="QPushButton" name="addPaper">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>20</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;微软雅黑&quot;;
+background-color: rgb(166, 172, 175);
+border-radius: 10px</string>
+    </property>
+    <property name="text">
+     <string>添加试卷</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 14pt &quot;微软雅黑&quot;;</string>
+    </property>
+    <property name="text">
+     <string>试卷列表</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>70</y>
+      <width>631</width>
+      <height>221</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>311</y>
+      <width>631</width>
+      <height>191</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <action name="action22">
    <property name="text">

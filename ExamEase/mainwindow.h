@@ -1,8 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include<readinglogs.h>
+
 #include <QMainWindow>
 #include<QLabel>
+#include "databaseutils.h"
+#include <QDatetime>
+#include "paper.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -14,15 +17,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void startDBusService();
-
 
 private:
     Ui::MainWindow *ui;
-    ReadingLogs *readingLogs;
+    DataBaseUtils db;
     QLabel * label ;
 private slots:
-    void updateTextBrower(const QString &message);
-    void updateMessageFlag();
+
 };
 #endif // MAINWINDOW_H
