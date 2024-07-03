@@ -21,7 +21,7 @@ background-color: rgb(249, 249, 249);</string>
    <widget class="QPushButton" name="addPaper">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>530</x>
       <y>20</y>
       <width>91</width>
       <height>31</height>
@@ -60,6 +60,24 @@ border-radius: 10px</string>
       <width>671</width>
       <height>441</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="refreshTable">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>20</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;微软雅黑&quot;;
+background-color: rgb(166, 172, 175);
+border-radius: 10px</string>
+    </property>
+    <property name="text">
+     <string>刷新</string>
     </property>
    </widget>
   </widget>

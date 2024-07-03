@@ -5,7 +5,11 @@
 #include<QLabel>
 #include "databaseutils.h"
 #include <QDatetime>
+#include <QTableWidget>
+#include <QMessageBox>
+#include <QMenu>
 #include "paper.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -17,7 +21,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    void initTable();
+    void operateButtons();
+    void makeColumnNonEditable(QTableWidget *tableWidget, int column);
+    void setupButtonsForPaper(QTableWidget *tableWidget, int row, const Paper &p, const QList<Paper> &list);
 private:
     Ui::MainWindow *ui;
     DataBaseUtils db;

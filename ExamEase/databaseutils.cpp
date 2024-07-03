@@ -157,7 +157,7 @@ QList<Question> DataBaseUtils::getAllQuestions()
     return questions;
 }
 
-bool DataBaseUtils::insertPaper(const Paper &paper)
+int DataBaseUtils::insertPaper(const Paper &paper)
 {
     QSqlQuery query;
     query.prepare("INSERT INTO paper (name, total, create_date) VALUES (?, ?, ?)");
@@ -165,18 +165,21 @@ bool DataBaseUtils::insertPaper(const Paper &paper)
     query.addBindValue(paper.name());
     query.addBindValue(paper.total());
     query.addBindValue(paper.createDate());
-
-    return query.exec();
+    query.exec();
+    return query.lastInsertId().toInt();
 }
 bool DataBaseUtils::updatePaper(const Paper &paper)
 {
     QSqlQuery query;
-    query.prepare("UPDATE paper SET name = ?, total = ?, create_date = ? WHERE id = ?");
-
-    query.addBindValue(paper.name());
-    query.addBindValue(paper.total());
-    query.addBindValue(paper.createDate());
+    query.prepare("UPDATE paper SET name = ? WHERE id = ?");
+    if(paper.name()!=NULL){
+        query.addBindValue(paper.name());
+    }
     query.addBindValue(paper.id());
+
+    if (!query.exec()) {
+        qDebug() << "Failed to update paper:" << query.lastError().text();
+    }
 
     return query.exec();
 }

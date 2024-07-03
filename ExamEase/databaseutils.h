@@ -17,7 +17,7 @@ public:
     void closeDatabase();
 
     // 插入新的Paper
-    bool insertPaper(const Paper &paper);
+    int insertPaper(const Paper &paper);
 
     // 更新已有的Paper
     bool updatePaper(const Paper &paper);
