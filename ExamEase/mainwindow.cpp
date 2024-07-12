@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QPushButton>
-#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -125,8 +125,8 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
     });
     //新增试题
     connect(addQuestion, &QPushButton::clicked, [=]() {
-
-
+        AddQuestion *aq = new AddQuestion(p.id());
+        aq->exec();
     });
     //修改试题
     connect(editQuestion, &QPushButton::clicked, [=]() {

@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
 #include<QLabel>
 #include "databaseutils.h"
@@ -9,6 +8,8 @@
 #include <QMessageBox>
 #include <QMenu>
 #include "paper.h"
+#include "addquestion.h"
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
