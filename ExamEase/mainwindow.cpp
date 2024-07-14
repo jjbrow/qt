@@ -87,7 +87,7 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
                                       background-color: #c0c0c0;
                                       border: none;
                                       color: white;
-                                      padding: 20px 5px;
+                                      padding: 30px 5px;
                                       text-align: center;
                                       text-decoration: none;
                                       font-size: 14px;

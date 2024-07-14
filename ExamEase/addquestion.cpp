@@ -19,8 +19,9 @@ AddQuestion::AddQuestion(int id) :
 {
     paper_id = id;
     ui->setupUi(this);
-
+    //设置样式
     customizeStyle();
+    ui->stackedWidget->setCurrentIndex(0);
 
 
 }
@@ -32,8 +33,33 @@ void AddQuestion::customizeStyle(){
     // 设置所有 QCheckBox 的大小和样式
     QList<QCheckBox *> checkboxes = this->findChildren<QCheckBox *>();
     QList<QLineEdit *> lineEdits =this->findChildren<QLineEdit*>();
+    QList<QRadioButton *> radioButtons = this->findChildren<QRadioButton *>();
+    // 创建QButtonGroup实例
+    buttonGroup = new QButtonGroup(this);
+
+    //设置按钮组  绑定值
+    for(QRadioButton *radioButton : radioButtons) {
+      //  checkbox->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }");
+        buttonGroup->addButton(radioButton);
+        // 当用户点击按钮后，可以通过信号槽机制获取值
+        connect(radioButton, &QRadioButton::clicked, [=]() {
+            QString value = radioButton->property("value").toString();
+            ui->answer->setText(value);
+            qDebug() << "当前选择的值为：" << value;
+        });
+    }
     for(QCheckBox *checkbox : checkboxes) {
-        checkbox->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }");
+      //获取所有选中的checkbox的值
+        connect(checkbox, &QCheckBox::clicked, [=]() {
+            QString value;
+            for(QCheckBox *temp : checkboxes) {
+                if (temp->isChecked()) {
+                         value.append(temp->property("value").toString());
+                    }
+            }
+            ui->answer->setText(value);
+            qDebug() << "当前选择的值为：" << value;
+        });
     }
     //设置lineEdit 圆角
     for(QLineEdit *lineEdit : lineEdits) {
@@ -46,6 +72,97 @@ void AddQuestion::customizeStyle(){
        qToolButton->setIcon(icon);
        qToolButton->setStyleSheet("QToolButton { background: transparent; }");
     }
+    //设置comboBox值
+    ui->type->setItemData(0,0);
+    ui->type->setItemData(1,1);
+    ui->type->setItemData(2,2);
 
+    // 连接信号到槽函数
+    connect(ui->type, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this,[=]{
+         // 获取当前选中的值
+         QVariant currentValue = ui->type->currentData();
+
+         if(currentValue==0){
+            //单选
+            //清除选中状态
+            clearSelections();
+            ui->stackedWidget->setCurrentIndex(0);
+
+         }else if(currentValue==1){
+             //判断
+             //清除选中状态
+             clearSelections();
+             ui->stackedWidget->setCurrentIndex(2);
+
+         }else if(currentValue==2){
+             //多选
+            //清除选中状态
+            clearSelections();
+            ui->stackedWidget->setCurrentIndex(1);
+         }
+
+    });
+    ui->radioButton_1->setProperty("value", "A");
+    ui->radioButton_2->setProperty("value", "B");
+    ui->radioButton_3->setProperty("value", "C");
+    ui->radioButton_4->setProperty("value", "D");
+    ui->radioButton_5->setProperty("value", "A");
+    ui->radioButton_6->setProperty("value", "B");
+    ui->checkBox_1->setProperty("value", "A");
+    ui->checkBox_2->setProperty("value", "B");
+    ui->checkBox_3->setProperty("value", "C");
+    ui->checkBox_4->setProperty("value", "D");
+    QStyledItemDelegate *delegate = new QStyledItemDelegate(this);
+    ui->type->setItemDelegate(delegate);
+    ui->type->setStyleSheet("QComboBox {"
+                                      "    border: 1px solid gray;"
+                                      "    border-radius: 3px;"
+                                      "    padding: 5px;"  // 增加选项之间的间距
+                                      "    min-width: 6em;"
+                                      "    min-height: 20px;"
+                                      "    background: white;"
+                                      "}"
+                                      "QComboBox::drop-down {"
+                                      "    subcontrol-origin: padding;"
+                                      "    subcontrol-position: top right;"
+                                      "    width: 20px;"
+                                      "    height: 30px;"
+                                      "    border-left-width: 1px;"
+                                      "    border-left-color: darkgray;"
+                                      "    border-left-style: solid;"
+                                      "    border-top-right-radius: 3px;"
+                                      "    border-bottom-right-radius: 3px;"
+
+                                      "}"
+
+                                      "QComboBox QAbstractItemView {"
+                                      "    border: 2px solid darkgray;"
+                                      "    padding: 2px;"
+                                      "    background-color: white;"
+                                      "}"
+                                      "QComboBox QAbstractItemView::item {"
+                                      "    height: 30px;"
+                                      "    padding-left: 10px;"
+                                      "    padding-right: 10px;"
+                                      "}"
+                                      "QComboBox QAbstractItemView::item:selected {"
+                                      "    background-color: lightblue;"
+                                      "}");
+}
+//清除选中状态
+void AddQuestion::clearSelections(){
+    // 获取 buttonGroup 中的所有按钮
+    QList<QCheckBox *> checkboxes = this->findChildren<QCheckBox *>();
+    buttonGroup->setExclusive(false);
+    QList<QAbstractButton*> buttons = buttonGroup->buttons();
+    foreach(QAbstractButton* button, buttons) {
+        button->setChecked(false);
+    }
+    for(QCheckBox *checkbox : checkboxes) {
+      checkbox->setChecked(false);
+    }
+    buttonGroup->setExclusive(true);
+    ui->answer->setText("");
 }
 

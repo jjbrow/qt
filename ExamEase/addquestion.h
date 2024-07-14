@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QDebug>
+#include <QRadioButton>
+#include <QButtonGroup>
+#include <QStyledItemDelegate>
 namespace Ui {
 class AddQuestion;
 }
@@ -19,8 +22,11 @@ public:
     int paper_id;
     //设置样式
     void customizeStyle();
+    //清除选中状态
+    void clearSelections();
 private:
     Ui::AddQuestion *ui;
+    QButtonGroup *buttonGroup;
 };
 
 #endif // ADDQUESTION_H
