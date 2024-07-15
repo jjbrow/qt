@@ -148,7 +148,7 @@ color: rgb(255, 0, 0);</string>
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="complete">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -219,7 +219,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_6"/>
+          <widget class="QLineEdit" name="lineEdit_s1"/>
          </item>
         </layout>
        </widget>
@@ -246,7 +246,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_7"/>
+          <widget class="QLineEdit" name="lineEdit_s2"/>
          </item>
         </layout>
        </widget>
@@ -273,7 +273,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_8"/>
+          <widget class="QLineEdit" name="lineEdit_s3"/>
          </item>
          <item>
           <widget class="QToolButton" name="toolButton_4">
@@ -307,7 +307,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_9"/>
+          <widget class="QLineEdit" name="lineEdit_s4"/>
          </item>
          <item>
           <widget class="QToolButton" name="toolButton_5">
@@ -371,7 +371,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_14"/>
+            <widget class="QLineEdit" name="lineEdit_m1"/>
            </item>
           </layout>
          </widget>
@@ -413,7 +413,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_15"/>
+            <widget class="QLineEdit" name="lineEdit_m2"/>
            </item>
           </layout>
          </widget>
@@ -455,7 +455,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_16"/>
+            <widget class="QLineEdit" name="lineEdit_m3"/>
            </item>
            <item>
             <widget class="QToolButton" name="toolButton_8">
@@ -504,7 +504,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_17"/>
+            <widget class="QLineEdit" name="lineEdit_m4"/>
            </item>
            <item>
             <widget class="QToolButton" name="toolButton_9">

@@ -22,7 +22,35 @@ AddQuestion::AddQuestion(int id) :
     //设置样式
     customizeStyle();
     ui->stackedWidget->setCurrentIndex(0);
+    //绑定按钮操作
+    connect(ui->complete,&QPushButton::clicked,[=]{
+        // 获取当前选中的值
+        QVariant currentValue = ui->type->currentData();
+        // 获取答案
+        QString answer = ui->answer->text();
+        if(currentValue==0){
+           //单选
+           QString s1 = ui->lineEdit_s1->text();
+           QString s2 = ui->lineEdit_s2->text();
+           QString s3 = ui->lineEdit_s3->text();
+           QString s4 = ui->lineEdit_s4->text();
+           qDebug()<<s1.append(s2).append(s3).append(s4);
 
+        }else if(currentValue==1){
+            //判断
+          qDebug()<<answer;
+
+        }else if(currentValue==2){
+            //多选
+            QString m1 =ui->lineEdit_m1->text();
+            QString m2 =ui->lineEdit_m2->text();
+            QString m3 =ui->lineEdit_m3->text();
+            QString m4 =ui->lineEdit_m4->text();
+            qDebug()<<m1.append(m2).append(m3).append(m4);
+
+        }
+
+    });
 
 }
 //设置样式
