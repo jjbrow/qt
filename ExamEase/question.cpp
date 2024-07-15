@@ -1,7 +1,7 @@
 #include "question.h"
 
 Question::Question()
-    : m_id(-1), m_paperId(-1), m_type(0), m_answer(0)
+    : m_id(-1), m_paperId(-1), m_type(0)
 {
 }
 
@@ -95,15 +95,26 @@ void Question::setOption5(const QString &option5)
     m_option5 = option5;
 }
 
-int Question::answer() const
+QString Question::analysis() const{
+    return m_analysis;
+}
+void Question::setAnalysis(const QString &analysis){
+    m_analysis = analysis;
+}
+
+
+
+QString Question::answer() const
 {
     return m_answer;
 }
 
-void Question::setAnswer(int answer)
+void Question::setAnswer(QString answer)
 {
     m_answer = answer;
 }
+
+
 
 QDateTime Question::createDate() const
 {

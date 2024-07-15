@@ -11,6 +11,7 @@ AddQuestion::AddQuestion(QWidget *parent) :
 AddQuestion::~AddQuestion()
 {
     delete ui;
+    db.closeDatabase();
 }
 //初始化添加试题页面
 AddQuestion::AddQuestion(int id) :
@@ -19,38 +20,77 @@ AddQuestion::AddQuestion(int id) :
 {
     paper_id = id;
     ui->setupUi(this);
+    //连接数据库
+    db.connectDataBase();
     //设置样式
     customizeStyle();
     ui->stackedWidget->setCurrentIndex(0);
-    //绑定按钮操作
+    //按钮操作绑定
+    buttonOperate();
+
+}
+//按钮操作绑定
+void AddQuestion::buttonOperate(){
+
+    //绑定确定操作
     connect(ui->complete,&QPushButton::clicked,[=]{
+        //题目
+        QString name = ui->textEdit->toPlainText();
+        //解析
+        QString analysis = ui->analysis->toPlainText();
+        if (name.isEmpty()) {
+               QMessageBox::warning(this, "警告", "题目不能为空");
+               return;
+           }
         // 获取当前选中的值
         QVariant currentValue = ui->type->currentData();
         // 获取答案
         QString answer = ui->answer->text();
+        Question q;
+        q.setPaperId(paper_id);
+        q.setType(currentValue.toInt());
+        q.setName(name);
+        q.setAnswer(answer);
+        q.setAnalysis(analysis);
+        q.setCreateDate(QDateTime::currentDateTime());
         if(currentValue==0){
            //单选
-           QString s1 = ui->lineEdit_s1->text();
-           QString s2 = ui->lineEdit_s2->text();
-           QString s3 = ui->lineEdit_s3->text();
-           QString s4 = ui->lineEdit_s4->text();
-           qDebug()<<s1.append(s2).append(s3).append(s4);
-
+           q.setOption1(ui->lineEdit_s1->text());
+           q.setOption2(ui->lineEdit_s2->text());
+           q.setOption3(ui->lineEdit_s3->text());
+           q.setOption4(ui->lineEdit_s4->text());
         }else if(currentValue==1){
             //判断
-          qDebug()<<answer;
+            q.setOption1("正确");
+            q.setOption2("错误");
 
         }else if(currentValue==2){
             //多选
-            QString m1 =ui->lineEdit_m1->text();
-            QString m2 =ui->lineEdit_m2->text();
-            QString m3 =ui->lineEdit_m3->text();
-            QString m4 =ui->lineEdit_m4->text();
-            qDebug()<<m1.append(m2).append(m3).append(m4);
+            q.setOption1(ui->lineEdit_m1->text());
+            q.setOption2(ui->lineEdit_m2->text());
+            q.setOption3(ui->lineEdit_m3->text());
+            q.setOption4(ui->lineEdit_m4->text());
+        }
+        if(db.insertQuestion(q)){
+            QMessageBox msgBox;
+            msgBox.setText("添加成功！");
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            // 显示消息框并等待用户点击
+            if (msgBox.exec() == QMessageBox::Ok) {
+                // 清空 QTextEdit 的内容
+                clearSelections();
+                ui->textEdit->clear();
+                ui->analysis->clear();
+            }
 
+            qDebug() << "添加题目成功" ;
+        }else{
+            qDebug() << "添加题目失败" ;
         }
 
     });
+
 
 }
 //设置样式

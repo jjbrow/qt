@@ -36,8 +36,11 @@ public:
     QString option5() const;
     void setOption5(const QString &option5);
 
-    int answer() const;
-    void setAnswer(int answer);
+    QString answer() const;
+    void setAnswer(QString answer);
+
+    QString analysis() const;
+    void setAnalysis(const QString &analysis);
 
     QDateTime createDate() const;
     void setCreateDate(const QDateTime &createDate);
@@ -52,7 +55,9 @@ private:
     QString m_option3;
     QString m_option4;
     QString m_option5;
-    int m_answer;
+    //解析
+    QString m_analysis;
+    QString m_answer;
     QDateTime m_createDate;
 };
 

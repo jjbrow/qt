@@ -6,6 +6,9 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QStyledItemDelegate>
+#include"question.h"
+#include"databaseutils.h"
+#include <QMessageBox>
 namespace Ui {
 class AddQuestion;
 }
@@ -24,9 +27,12 @@ public:
     void customizeStyle();
     //清除选中状态
     void clearSelections();
+    //按钮操作绑定
+    void buttonOperate();
 private:
     Ui::AddQuestion *ui;
     QButtonGroup *buttonGroup;
+    DataBaseUtils db;
 };
 
 #endif // ADDQUESTION_H

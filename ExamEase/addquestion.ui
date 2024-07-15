@@ -138,7 +138,7 @@ color: rgb(255, 0, 0);</string>
     <string>解析：</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_2">
+  <widget class="QTextEdit" name="analysis">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -184,7 +184,7 @@ color: rgb(255, 0, 0);</string>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="page">
     <widget class="QWidget" name="widget_8" native="true">

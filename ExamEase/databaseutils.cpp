@@ -52,7 +52,8 @@ void DataBaseUtils::connectDataBase(){
                                      "option3 TEXT, "
                                      "option4 TEXT, "
                                      "option5 TEXT, "
-                                     "answer INTEGER, "
+                                     "analysis TEXT,"
+                                     "answer TEXT, "
                                      "create_date DATETIME)";
 
        if (!query.exec(createQuestionTable)) {
@@ -64,26 +65,31 @@ void DataBaseUtils::connectDataBase(){
 bool DataBaseUtils::insertQuestion(const Question &question)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO question (paper_id, name, type, option1, option2, option3, option4, option5, answer, create_date) "
-                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    query.prepare("INSERT INTO question (paper_id, name, type, option1, option2, option3, option4, option5,analysis, answer, create_date) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
 
     query.addBindValue(question.paperId());
     query.addBindValue(question.name());
     query.addBindValue(question.type());
-    query.addBindValue(question.option1());
-    query.addBindValue(question.option2());
-    query.addBindValue(question.option3());
-    query.addBindValue(question.option4());
-    query.addBindValue(question.option5());
-    query.addBindValue(question.answer());
+    query.addBindValue(question.option1().isEmpty()? QVariant():question.option1());
+    query.addBindValue(question.option2().isEmpty()? QVariant():question.option2());
+    query.addBindValue(question.option3().isEmpty()? QVariant():question.option3());
+    query.addBindValue(question.option4().isEmpty()? QVariant():question.option4());
+    query.addBindValue(question.option5().isEmpty()? QVariant():question.option5());
+    query.addBindValue(question.analysis().isEmpty()? QVariant():question.analysis());
+    query.addBindValue(question.answer().isEmpty()? QVariant():question.answer());
     query.addBindValue(question.createDate());
 
-    return query.exec();
+    if (!query.exec()) {
+        qDebug() << "Failed to insert question:" << query.lastError();
+        return false;
+    }
+    return true;
 }
 bool DataBaseUtils::updateQuestion(const Question &question)
 {
     QSqlQuery query;
-    query.prepare("UPDATE question SET paper_id = ?, name = ?, type = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, option5 = ?, answer = ?, create_date = ? "
+    query.prepare("UPDATE question SET paper_id = ?, name = ?, type = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, option5 = ?,analysis=? answer = ?, create_date = ? "
                   "WHERE id = ?");
 
     query.addBindValue(question.paperId());
@@ -94,6 +100,7 @@ bool DataBaseUtils::updateQuestion(const Question &question)
     query.addBindValue(question.option3());
     query.addBindValue(question.option4());
     query.addBindValue(question.option5());
+    query.addBindValue(question.analysis());
     query.addBindValue(question.answer());
     query.addBindValue(question.createDate());
     query.addBindValue(question.id());
@@ -111,7 +118,7 @@ bool DataBaseUtils::deleteQuestion(int id)
 Question DataBaseUtils::getQuestion(int id)
 {
     QSqlQuery query;
-    query.prepare("SELECT id, paper_id, name, type, option1, option2, option3, option4, option5, answer, create_date FROM question WHERE id = ?");
+    query.prepare("SELECT id, paper_id, name, type, option1, option2, option3, option4, option5,analysis, answer, create_date FROM question WHERE id = ?");
     query.addBindValue(id);
     query.exec();
 
@@ -126,8 +133,9 @@ Question DataBaseUtils::getQuestion(int id)
         question.setOption3(query.value(6).toString());
         question.setOption4(query.value(7).toString());
         question.setOption5(query.value(8).toString());
-        question.setAnswer(query.value(9).toInt());
-        question.setCreateDate(query.value(10).toDateTime());
+        question.setAnalysis(query.value(9).toString());
+        question.setAnswer(query.value(10).toString());
+        question.setCreateDate(query.value(11).toDateTime());
     }
 
     return question;
@@ -148,8 +156,9 @@ QList<Question> DataBaseUtils::getAllQuestions()
         question.setOption3(query.value(6).toString());
         question.setOption4(query.value(7).toString());
         question.setOption5(query.value(8).toString());
-        question.setAnswer(query.value(9).toInt());
-        question.setCreateDate(query.value(10).toDateTime());
+        question.setAnalysis(query.value(9).toString());
+        question.setAnswer(query.value(10).toString());
+        question.setCreateDate(query.value(11).toDateTime());
 
         questions.append(question);
     }
