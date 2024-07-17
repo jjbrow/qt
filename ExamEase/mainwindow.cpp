@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     initTable();
     //操作按钮绑定
     operateButtons();
+    //创建 Word 应用程序对象
+    wordApp = new QAxObject("Word.Application");
 
 
 }
@@ -135,7 +137,7 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
     });
     //导出
     connect(exportPaper, &QPushButton::clicked, [=]() {
-
+        exportForWord(p.id());
 
     });
     //删除
@@ -214,7 +216,169 @@ void MainWindow::operateButtons(){
         initTable();
     });
 }
+//将试卷导出到word
+void MainWindow::exportForWord(int id){
+        // 创建 Word 应用程序对象
+        wordApp = new QAxObject("Word.Application");
+        if (!wordApp) {
+            qDebug() << "无法实例化 Word.Application";
+            QMessageBox::critical(ui->tableWidget, "错误", "无法实例化 Word.Application");
+            return; // 退出或处理错误
+        }
+        wordApp->dynamicCall("SetVisible(bool)", false); // 不显示 Word 应用程序
+        // 创建一个新的文档
+        QAxObject* documents = wordApp->querySubObject("Documents");
+        if (!documents) {
+            qDebug() << "Documents 对象未找到";
+            QMessageBox::critical(ui->tableWidget, "错误", "Documents 对象未找到");
+            return;
+        }
+        QAxObject* document = documents->querySubObject("Add()");
+        if (!document) {
+            qDebug() << "文档未成功创建";
+            QMessageBox::critical(ui->tableWidget, "错误", "文档未成功创建");
+            return;
+        }
+        //查询试卷标题
+        Paper p = db.getPaper(id);
 
+        // 获取文档的内容
+        QAxObject* content = document->querySubObject("Content");
+
+        // 插入标题
+        QAxObject* paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+        QAxObject* range = paragraph->querySubObject("Range");
+        range->dynamicCall("Text", p.name());
+        QAxObject* font = range->querySubObject("Font");
+        font->setProperty("Bold", true);
+        font->setProperty("Size", 24);
+
+        // 将标题段落居中
+        paragraph->setProperty("Alignment", 1); // 1 代表 wdAlignParagraphCenter
+        //姓名
+        paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+        range = paragraph->querySubObject("Range");
+
+        QString s = "(本试卷卷面总分100分, 及格分70分, 考试时间100分钟)\n";
+        s.append(" 姓名:              分数:     ");
+        range->dynamicCall("Text", s);
+        paragraph->setProperty("Alignment", 1); // 0 代表 wdAlignParagraphLeft
+        font = range->querySubObject("Font");
+        font->setProperty("Bold", false);
+        font->setProperty("Size", 13);
+        //查询各类型试题
+         QList<Question> allList = db.getAllQuestionsByPaper(id);
+         //单选
+         QList<Question> list;
+         //判断
+         QList<Question> judge;
+         //多选
+         QList<Question> choice;
+         for (Question &q :allList) {
+             if(q.type()==0){
+                 //单选
+                 list.append(q);
+             }else if(q.type()==1){
+                 //判断
+                 judge.append(q);
+             }else if(q.type()==2){
+                 //多选
+                 choice.append(q);
+             }
+         }
+         int no = 1;
+         if(!list.isEmpty()){
+             // 插入单选择题
+             paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+             range = paragraph->querySubObject("Range");
+             range->dynamicCall("Text", "\n第一部分: 选择题 每题1分 请选择一个最合适的答案");
+             paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+             font = range->querySubObject("Font");
+             font->setProperty("Bold", false);
+             font->setProperty("Size", 13);
+             // 插入选择题
+             for (int i = 0; i < list.size(); ++i) {
+                 paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+                 range = paragraph->querySubObject("Range");
+                 QString question = QString::number(no++);
+                 question.append(".");
+                 question.append(list[i].name());
+                 question.append("( )\n");
+                 question.append("A.").append(list[i].option1()).append("\n");
+                 question.append("B.").append(list[i].option2()).append("\n");
+                 if(!list[i].option3().isEmpty()){
+                     question.append("C.").append(list[i].option3()).append("\n");
+                 }
+                 if(!list[i].option4().isEmpty()){
+                     question.append("D.").append(list[i].option4());
+                 }
+                 range->dynamicCall("Text", question);
+                 paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+               }
+         }
+         if(!judge.isEmpty()){
+             // 插入判断
+             paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+             range = paragraph->querySubObject("Range");
+             range->dynamicCall("Text", "\n第二部分: 判断题 每题1分 请选择一个最合适的答案");
+             paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+             font = range->querySubObject("Font");
+             font->setProperty("Bold", false);
+             font->setProperty("Size", 13);
+             // 插入判断题
+             for (int i = 0; i < judge.size(); ++i) {
+                 paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+                 range = paragraph->querySubObject("Range");
+                 QString question = QString::number(no++);
+                 question.append(".");
+                 question.append(judge[i].name());
+                 question.append("( )");
+                 range->dynamicCall("Text", question);
+                 paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+               }
+         }
+         if(!choice.isEmpty()){
+             // 插入多选择题
+             paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+             range = paragraph->querySubObject("Range");
+             range->dynamicCall("Text", "\n第三部分: 多选题 每题2分 请选择一个最合适的答案");
+             paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+             font = range->querySubObject("Font");
+             font->setProperty("Bold", false);
+             font->setProperty("Size", 13);
+             // 插入多选择题
+             for (int i = 0; i < choice.size(); ++i) {
+                 paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
+                 range = paragraph->querySubObject("Range");
+                 QString question = QString::number(no++);
+                 question.append(".");
+                 question.append(choice[i].name());
+                 question.append("( )\n");
+                 question.append("A.").append(choice[i].option1()).append("\n");
+                 question.append("B.").append(choice[i].option2()).append("\n");
+                 if(!list[i].option3().isEmpty()){
+                     question.append("C.").append(choice[i].option3()).append("\n");
+                 }
+                 if(!list[i].option4().isEmpty()){
+                     question.append("D.").append(choice[i].option4());
+                 }
+                 range->dynamicCall("Text", question);
+                 paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
+               }
+         }
+    // 保存文档
+    QString filePath  = "D:/Code/";
+    filePath.append(p.name()).append(DateUtils::getCurrentDateTimeString()).append(".docx");
+    document->dynamicCall("SaveAs(const QString&)", filePath);
+    // 关闭文档和 Word 应用程序
+    document->dynamicCall("Close()");
+    wordApp->dynamicCall("Quit()");
+    delete wordApp;
+    qDebug() << "文档成功创建";
+    QMessageBox msgBox;
+    msgBox.setText("文件成功导出到路径:  "+filePath);
+    msgBox.exec();
+}
 
 //析构函数
 MainWindow::~MainWindow()

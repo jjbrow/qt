@@ -158,10 +158,10 @@ color: rgb(255, 0, 0);</string>
     </rect>
    </property>
    <property name="text">
-    <string>完成</string>
+    <string>添加</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="closeAdd">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -171,7 +171,7 @@ color: rgb(255, 0, 0);</string>
     </rect>
    </property>
    <property name="text">
-    <string>继续下一题</string>
+    <string>关闭</string>
    </property>
   </widget>
   <widget class="QStackedWidget" name="stackedWidget">
@@ -180,11 +180,11 @@ color: rgb(255, 0, 0);</string>
      <x>420</x>
      <y>10</y>
      <width>354</width>
-     <height>296</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="page">
     <widget class="QWidget" name="widget_8" native="true">
@@ -193,7 +193,7 @@ color: rgb(255, 0, 0);</string>
        <x>9</x>
        <y>9</y>
        <width>336</width>
-       <height>278</height>
+       <height>321</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -275,13 +275,6 @@ font: 14pt &quot;微软雅黑&quot;;</string>
          <item>
           <widget class="QLineEdit" name="lineEdit_s3"/>
          </item>
-         <item>
-          <widget class="QToolButton" name="toolButton_4">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
@@ -310,7 +303,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
           <widget class="QLineEdit" name="lineEdit_s4"/>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_5">
+          <widget class="QToolButton" name="deleteButton_1">
            <property name="text">
             <string>...</string>
            </property>
@@ -320,7 +313,41 @@ font: 14pt &quot;微软雅黑&quot;;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QWidget" name="widget_16" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_13">
+         <item>
+          <widget class="QRadioButton" name="radioButton_7">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_22">
+           <property name="styleSheet">
+            <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;微软雅黑&quot;;</string>
+           </property>
+           <property name="text">
+            <string>E</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_s5"/>
+         </item>
+         <item>
+          <widget class="QToolButton" name="deleteButton_2">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addAnswer">
         <property name="text">
          <string>添加一个答案</string>
         </property>

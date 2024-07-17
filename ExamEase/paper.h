@@ -21,6 +21,7 @@ public:
     QDateTime createDate() const;
     void setCreateDate(const QDateTime &createDate);
 
+
 private:
     int m_id;
     QString m_name;

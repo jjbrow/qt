@@ -46,6 +46,9 @@ public:
     // 查询所有Question
     QList<Question> getAllQuestions();
 
+    // 通过试卷id和试题类型查询所有Question
+    QList<Question> getAllQuestionsByPaper(int id);
+
 
 
 private:

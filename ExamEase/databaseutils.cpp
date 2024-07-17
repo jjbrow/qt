@@ -166,6 +166,34 @@ QList<Question> DataBaseUtils::getAllQuestions()
     return questions;
 }
 
+QList<Question> DataBaseUtils::getAllQuestionsByPaper(int id)
+{
+    QList<Question> questions;
+    QSqlQuery query("SELECT id, paper_id, name, type, option1, option2, option3, option4, option5, answer, create_date FROM question where paper_id = ? ");
+    query.addBindValue(id);
+
+    query.exec();
+    while (query.next()) {
+        Question question;
+        question.setId(query.value(0).toInt());
+        question.setPaperId(query.value(1).toInt());
+        question.setName(query.value(2).toString());
+        question.setType(query.value(3).toInt());
+        question.setOption1(query.value(4).toString());
+        question.setOption2(query.value(5).toString());
+        question.setOption3(query.value(6).toString());
+        question.setOption4(query.value(7).toString());
+        question.setOption5(query.value(8).toString());
+        question.setAnalysis(query.value(9).toString());
+        question.setAnswer(query.value(10).toString());
+        question.setCreateDate(query.value(11).toDateTime());
+
+        questions.append(question);
+    }
+
+    return questions;
+}
+
 int DataBaseUtils::insertPaper(const Paper &paper)
 {
     QSqlQuery query;

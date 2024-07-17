@@ -28,10 +28,11 @@ AddQuestion::AddQuestion(int id) :
     //按钮操作绑定
     buttonOperate();
 
+
+
 }
 //按钮操作绑定
 void AddQuestion::buttonOperate(){
-
     //绑定确定操作
     connect(ui->complete,&QPushButton::clicked,[=]{
         //题目
@@ -80,8 +81,6 @@ void AddQuestion::buttonOperate(){
             if (msgBox.exec() == QMessageBox::Ok) {
                 // 清空 QTextEdit 的内容
                 clearSelections();
-                ui->textEdit->clear();
-                ui->analysis->clear();
             }
 
             qDebug() << "添加题目成功" ;
@@ -90,8 +89,40 @@ void AddQuestion::buttonOperate(){
         }
 
     });
+    //绑定关闭操作
+    connect(ui->closeAdd,&QPushButton::clicked, this, &QDialog::reject);
+    //删除图标1
+    connect(ui->deleteButton_1,&QPushButton::clicked,[=]{
+        QWidget *widgetToRemove = this->findChild<QWidget*>("widget_12");
+           if (widgetToRemove) {
+               widgetToRemove->hide(); // 安全删除
+               ui->lineEdit_s4->clear();
+           }
+           QWidget *widget_16 = this->findChild<QWidget*>("widget_16");
+              if (widget_16) {
+                  widget_16->hide(); // 安全删除
+                  ui->lineEdit_s5->clear();
+              }
+    });
+    //删除图标2
+    connect(ui->deleteButton_2,&QPushButton::clicked,[=]{
 
-
+           QWidget *widget_16 = this->findChild<QWidget*>("widget_16");
+              if (widget_16) {
+                  widget_16->hide(); // 安全删除
+                  ui->lineEdit_s5->clear();
+              }
+    });
+    //添加答案按钮
+    connect(ui->addAnswer,&QPushButton::clicked,[=]{
+        QWidget *widget_12 = this->findChild<QWidget*>("widget_12");
+        if(!widget_12->isVisible()){
+            widget_12->show();
+            return;
+        }
+        QWidget *widget_16 = this->findChild<QWidget*>("widget_16");
+        widget_16->show();
+    });
 }
 //设置样式
 void AddQuestion::customizeStyle(){
@@ -107,7 +138,6 @@ void AddQuestion::customizeStyle(){
 
     //设置按钮组  绑定值
     for(QRadioButton *radioButton : radioButtons) {
-      //  checkbox->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }");
         buttonGroup->addButton(radioButton);
         // 当用户点击按钮后，可以通过信号槽机制获取值
         connect(radioButton, &QRadioButton::clicked, [=]() {
@@ -217,6 +247,9 @@ void AddQuestion::customizeStyle(){
                                       "QComboBox QAbstractItemView::item:selected {"
                                       "    background-color: lightblue;"
                                       "}");
+
+    QWidget *widget_16 = this->findChild<QWidget*>("widget_16");
+    widget_16->hide();
 }
 //清除选中状态
 void AddQuestion::clearSelections(){
@@ -232,5 +265,16 @@ void AddQuestion::clearSelections(){
     }
     buttonGroup->setExclusive(true);
     ui->answer->setText("");
+    // 清空所有 QLineEdit
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+    for (QLineEdit* lineEdit : lineEdits) {
+        lineEdit->clear();
+    }
+
+    // 清空所有 QTextEdit
+    QList<QTextEdit*> textEdits = this->findChildren<QTextEdit*>();
+    for (QTextEdit* textEdit : textEdits) {
+        textEdit->clear();
+    }
 }
 
