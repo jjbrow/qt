@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include<QPushButton>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/Image/system.svg"));
     //连接数据库
     db.connectDataBase();
     //初始化表格
@@ -16,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     operateButtons();
     //创建 Word 应用程序对象
     wordApp = new QAxObject("Word.Application");
-
 
 }
 //表格初始化
@@ -65,6 +65,7 @@ void MainWindow::initTable(){
                 Paper paper = list[row];
                 paper.setName(item->text());
                 if (db.updatePaper(paper)) {
+                    refreshTable();
                     qDebug() << "更新成功";
                 } else {
                     QMessageBox::critical(ui->tableWidget, "错误", "更新数据库失败");
@@ -120,23 +121,48 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
     tableWidget->setCellWidget(row, 5, editQuestion);
     tableWidget->setCellWidget(row, 6, exportPaper);
     tableWidget->setCellWidget(row, 7, deleteButton);
+    QString pName = p.name();
     //模拟考试
     connect(exam, &QPushButton::clicked, [=]() {
+        if(pName.isNull()){
+            QMessageBox::critical(ui->tableWidget, "错误", "试卷名称不能为空");
+            return;
+        }
+        QList<Question> list =db.getAllQuestionsByPaper(p.id());
+        if(list.isEmpty()){
+            QMessageBox::critical(ui->tableWidget, "错误", "试卷中题目为空");
+            return;
+        }
+        SimulatedExam *s = new SimulatedExam(list);
+        s->exec();
 
 
     });
     //新增试题
     connect(addQuestion, &QPushButton::clicked, [=]() {
+        if(pName.isNull()){
+            QMessageBox::critical(ui->tableWidget, "错误", "试卷名称不能为空");
+            return;
+        }
         AddQuestion *aq = new AddQuestion(p.id());
         aq->exec();
     });
     //修改试题
     connect(editQuestion, &QPushButton::clicked, [=]() {
-
+        if(pName.isNull()){
+            QMessageBox::critical(ui->tableWidget, "错误", "试卷名称不能为空");
+            return;
+        }
+        EditQuestion *ed = new EditQuestion(p.id());
+        ed->exec();
 
     });
     //导出
     connect(exportPaper, &QPushButton::clicked, [=]() {
+        if(pName.isNull()){
+            QMessageBox::critical(ui->tableWidget, "错误", "试卷名称不能为空");
+            return;
+        }
         exportForWord(p.id());
 
     });
@@ -151,6 +177,7 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
                     if(db.deletePaper(p.id())){
                         tableWidget->removeRow(row);
                         qDebug()<<"删除成功";
+                        refreshTable();
                     }else{
                         QMessageBox::critical(ui->tableWidget, "错误", "删除试卷失败");
                     }
@@ -188,6 +215,21 @@ void MainWindow::operateButtons(){
 
     //绑定添加按钮
     connect(ui->addPaper,&QPushButton::clicked,this,[=]{
+        //判断上一行的name是否为空
+        int newRow = ui->tableWidget->rowCount();
+        // 获取最后一行的行号
+        int lastRow = newRow - 1;
+        // 检查表格是否为空
+        if (lastRow > 0) {
+            // 获取最后一行第二列的项
+            QTableWidgetItem *item = ui->tableWidget->item(lastRow, 0);
+            // 检查项是否为空
+            if (!item || item->text().isEmpty()) {
+                QMessageBox::critical(ui->tableWidget, "错误", "试卷名称不能为空");
+                return;
+            }
+        }
+
         // 新增一行数据
         Paper p;
         p.setTotal(0);
@@ -195,7 +237,6 @@ void MainWindow::operateButtons(){
         int id = db.insertPaper(p);
         if (id!=NULL) {
             // 如果成功添加到数据库，则更新表格界面
-            int newRow = ui->tableWidget->rowCount();
             ui->tableWidget->insertRow(newRow);
             ui->tableWidget->setItem(newRow, 1, new QTableWidgetItem(QString::number(p.total())));
             ui->tableWidget->setItem(newRow, 2, new QTableWidgetItem(p.createDate().toString("yyyy-MM-dd hh:mm:ss")));
@@ -210,14 +251,13 @@ void MainWindow::operateButtons(){
     });
     //绑定刷新按钮
     connect(ui->refreshTable,&QPushButton::clicked,this,[=]{
-        //解除表格名称改变信号
-        disconnect(ui->tableWidget, &QTableWidget::cellChanged, nullptr, nullptr);
-        //初始化表格
-        initTable();
+        refreshTable();
     });
 }
 //将试卷导出到word
 void MainWindow::exportForWord(int id){
+        //鼠标开启等待
+        QApplication::setOverrideCursor(Qt::WaitCursor);
         // 创建 Word 应用程序对象
         wordApp = new QAxObject("Word.Application");
         if (!wordApp) {
@@ -375,9 +415,18 @@ void MainWindow::exportForWord(int id){
     wordApp->dynamicCall("Quit()");
     delete wordApp;
     qDebug() << "文档成功创建";
+    //鼠标结束等待
+    QApplication::restoreOverrideCursor();
     QMessageBox msgBox;
     msgBox.setText("文件成功导出到路径:  "+filePath);
     msgBox.exec();
+}
+//刷新表格
+void MainWindow::refreshTable(){
+    //解除表格名称改变信号
+    disconnect(ui->tableWidget, &QTableWidget::cellChanged, nullptr, nullptr);
+    //初始化表格
+    initTable();
 }
 
 //析构函数

@@ -20,9 +20,8 @@ class AddQuestion : public QDialog
 public:
     explicit AddQuestion(QWidget *parent = nullptr);
     AddQuestion(int id);
+    AddQuestion(Question question);
     ~AddQuestion();
-    // 试卷id
-    int paper_id;
     //设置样式
     void customizeStyle();
     //清除选中状态
@@ -33,6 +32,10 @@ private:
     Ui::AddQuestion *ui;
     QButtonGroup *buttonGroup;
     DataBaseUtils db;
+    // 试卷id
+    int paper_id;
+    //修改试卷
+    Question a_question;
 };
 
 #endif // ADDQUESTION_H

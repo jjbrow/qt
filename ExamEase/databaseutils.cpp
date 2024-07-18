@@ -89,7 +89,7 @@ bool DataBaseUtils::insertQuestion(const Question &question)
 bool DataBaseUtils::updateQuestion(const Question &question)
 {
     QSqlQuery query;
-    query.prepare("UPDATE question SET paper_id = ?, name = ?, type = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, option5 = ?,analysis=? answer = ?, create_date = ? "
+    query.prepare("UPDATE question SET paper_id = ?, name = ?, type = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, option5 = ?,analysis=? ,answer = ?, create_date = ? "
                   "WHERE id = ?");
 
     query.addBindValue(question.paperId());
@@ -105,7 +105,11 @@ bool DataBaseUtils::updateQuestion(const Question &question)
     query.addBindValue(question.createDate());
     query.addBindValue(question.id());
 
-    return query.exec();
+    if (!query.exec()) {
+        qDebug() << "Failed to insert question:" << query.lastError();
+        return false;
+    }
+    return true;
 }
 bool DataBaseUtils::deleteQuestion(int id)
 {
@@ -169,7 +173,7 @@ QList<Question> DataBaseUtils::getAllQuestions()
 QList<Question> DataBaseUtils::getAllQuestionsByPaper(int id)
 {
     QList<Question> questions;
-    QSqlQuery query("SELECT id, paper_id, name, type, option1, option2, option3, option4, option5, answer, create_date FROM question where paper_id = ? ");
+    QSqlQuery query("SELECT id, paper_id, name, type, option1, option2, option3, option4, option5, analysis,answer, create_date FROM question where paper_id = ? order by type");
     query.addBindValue(id);
 
     query.exec();

@@ -484,13 +484,6 @@ font: 14pt &quot;微软雅黑&quot;;</string>
            <item>
             <widget class="QLineEdit" name="lineEdit_m3"/>
            </item>
-           <item>
-            <widget class="QToolButton" name="toolButton_8">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
@@ -534,7 +527,7 @@ font: 14pt &quot;微软雅黑&quot;;</string>
             <widget class="QLineEdit" name="lineEdit_m4"/>
            </item>
            <item>
-            <widget class="QToolButton" name="toolButton_9">
+            <widget class="QToolButton" name="deleteButton_9">
              <property name="text">
               <string>...</string>
              </property>
@@ -544,7 +537,56 @@ font: 14pt &quot;微软雅黑&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_6">
+         <widget class="QWidget" name="widget_23" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_19">
+           <item>
+            <widget class="QCheckBox" name="checkBox_5">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_23">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;微软雅黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>E</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_m5"/>
+           </item>
+           <item>
+            <widget class="QToolButton" name="deleteButton_10">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addCheckBox">
           <property name="text">
            <string>添加一个答案</string>
           </property>

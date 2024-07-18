@@ -12,6 +12,10 @@
 #include <QDebug>
 #include <QAxObject>
 #include "dateutils.h"
+#include<QPushButton>
+#include"editquestion.h"
+#include"simulatedexam.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -33,6 +37,8 @@ public:
     void setupButtonsForPaper(QTableWidget *tableWidget, int row, const Paper &p, const QList<Paper> &list);
     //将试卷导出到word
     void exportForWord(int id);
+    //刷新表格
+    void refreshTable();
 private:
     Ui::MainWindow *ui;
     DataBaseUtils db;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditQuestion</class>
+ <widget class="QDialog" name="EditQuestion">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>777</width>
+    <height>479</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>修改试题</string>
+  </property>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>-2</x>
+     <y>-2</y>
+     <width>781</width>
+     <height>485</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>781</width>
+     <height>485</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>781</width>
+     <height>485</height>
+    </size>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

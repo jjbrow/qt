@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>Image/delete.png</file>
+        <file>Image/system.svg</file>
+        <file>Image/add.svg</file>
+        <file>Image/detail.svg</file>
+        <file>Image/loading.gif</file>
+        <file>Image/editing.svg</file>
+        <file>Image/search.svg</file>
     </qresource>
 </RCC>

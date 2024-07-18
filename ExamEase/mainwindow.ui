@@ -67,10 +67,10 @@ border-radius: 10px</string>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>741</width>
-      <height>401</height>
+      <x>-3</x>
+      <y>56</y>
+      <width>771</width>
+      <height>421</height>
      </rect>
     </property>
    </widget>

@@ -18,22 +18,28 @@ SOURCES += \
     addquestion.cpp \
     databaseutils.cpp \
     dateutils.cpp \
+    editquestion.cpp \
     main.cpp \
     mainwindow.cpp \
     paper.cpp \
-    question.cpp
+    question.cpp \
+    simulatedexam.cpp
 
 HEADERS += \
     addquestion.h \
     databaseutils.h \
     dateutils.h \
+    editquestion.h \
     mainwindow.h \
     paper.h \
-    question.h
+    question.h \
+    simulatedexam.h
 
 FORMS += \
     addquestion.ui \
-    mainwindow.ui
+    editquestion.ui \
+    mainwindow.ui \
+    simulatedexam.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
