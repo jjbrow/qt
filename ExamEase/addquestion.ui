@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>添加试题</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="widget_3" native="true">
    <property name="geometry">
     <rect>

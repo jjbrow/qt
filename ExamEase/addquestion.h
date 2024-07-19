@@ -36,6 +36,10 @@ private:
     int paper_id;
     //修改试卷
     Question a_question;
+signals:
+    void dialogClosed();
+protected:
+    void closeEvent(QCloseEvent *event) override; // 重写关闭事件
 };
 
 #endif // ADDQUESTION_H

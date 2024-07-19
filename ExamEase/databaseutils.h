@@ -21,7 +21,7 @@ public:
 
     // 更新已有的Paper
     bool updatePaper(const Paper &paper);
-
+    bool updatePaperTotal(const Paper &paper);
     // 删除Paper
     bool deletePaper(int id);
 

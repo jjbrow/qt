@@ -12,6 +12,7 @@ AddQuestion::~AddQuestion()
 {
     delete ui;
     db.closeDatabase();
+    delete buttonGroup;
 }
 //修改试题
 AddQuestion::AddQuestion(Question q) :
@@ -207,7 +208,7 @@ void AddQuestion::buttonOperate(){
 
     });
     //绑定关闭操作
-    connect(ui->closeAdd,&QPushButton::clicked, this, &QDialog::reject);
+    connect(ui->closeAdd,&QPushButton::clicked, this, &QDialog::close);
     //删除单选图标1
     connect(ui->deleteButton_1,&QPushButton::clicked,[=]{
         QWidget *widgetToRemove = this->findChild<QWidget*>("widget_12");
@@ -431,5 +432,9 @@ void AddQuestion::clearSelections(){
     for (QTextEdit* textEdit : textEdits) {
         textEdit->clear();
     }
+}
+void AddQuestion::closeEvent(QCloseEvent *event) {
+    emit dialogClosed(); // 发射信号
+    QDialog::closeEvent(event); // 调用基类的关闭事件处理
 }
 

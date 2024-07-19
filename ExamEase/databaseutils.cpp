@@ -224,6 +224,19 @@ bool DataBaseUtils::updatePaper(const Paper &paper)
 
     return query.exec();
 }
+bool DataBaseUtils::updatePaperTotal(const Paper &paper)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE paper SET total = ? WHERE id = ?");
+    query.addBindValue(paper.total());
+    query.addBindValue(paper.id());
+
+    if (!query.exec()) {
+        qDebug() << "Failed to update paper:" << query.lastError().text();
+    }
+
+    return query.exec();
+}
 bool DataBaseUtils::deletePaper(int id)
 {
     QSqlQuery query;

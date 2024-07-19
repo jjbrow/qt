@@ -7,5 +7,6 @@
         <file>Image/loading.gif</file>
         <file>Image/editing.svg</file>
         <file>Image/search.svg</file>
+        <file>Image/simulated.svg</file>
     </qresource>
 </RCC>

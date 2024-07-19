@@ -36,6 +36,10 @@ private:
     // 试卷id
     int paper_id;
     DataBaseUtils db;
+signals:
+    void dialogClosed();
+protected:
+    void closeEvent(QCloseEvent *event) override; // 重写关闭事件
 };
 
 #endif // EDITQUESTION_H

@@ -19,7 +19,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
+constexpr int fontSize = 11;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -37,14 +37,13 @@ public:
     void setupButtonsForPaper(QTableWidget *tableWidget, int row, const Paper &p, const QList<Paper> &list);
     //将试卷导出到word
     void exportForWord(int id);
-    //刷新表格
-    void refreshTable();
 private:
     Ui::MainWindow *ui;
     DataBaseUtils db;
     QLabel * label ;
     QAxObject* wordApp;
 private slots:
-
+    //刷新表格
+void refreshTable();
 };
 #endif // MAINWINDOW_H

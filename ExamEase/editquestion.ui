@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>修改试题</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(249, 249, 249);</string>
+  </property>
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>

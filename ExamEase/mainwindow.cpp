@@ -15,30 +15,32 @@ MainWindow::MainWindow(QWidget *parent)
     initTable();
     //操作按钮绑定
     operateButtons();
-    //创建 Word 应用程序对象
-    wordApp = new QAxObject("Word.Application");
+
+
 
 }
 //表格初始化
 void MainWindow::initTable(){
     ui->tableWidget->setRowCount(0); // 清除现有内容
     //设置表格列
-    ui->tableWidget->setColumnCount(8);
+    ui->tableWidget->setColumnCount(9);
     // 设置表头
     QStringList headers;
-    headers << "名称" << "分数" << "创建日期"<<"模拟考试"<<"新增试题"<<"修改试题"<<"导出"<<"删除";
+    headers << "名称" << "分数" << "题目数"<< "创建日期"<<"模拟考试"<<"新增试题"<<"修改试题"<<"导出"<<"删除";
     QHeaderView *header = ui->tableWidget->horizontalHeader();
     //自动宽度
-    header->setSectionResizeMode(2, QHeaderView::Stretch);
-   // header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Stretch);
+    header->setSectionResizeMode(0, QHeaderView::Stretch);
     ui->tableWidget->setHorizontalHeaderLabels(headers);
     // 设置每列的具体宽度（如果需要的话）
     ui->tableWidget->setColumnWidth(1, 50); // 设置“名称”列宽度为100
+    ui->tableWidget->setColumnWidth(2, 50);
     ui->tableWidget->setColumnWidth(3, 80); // 设置“名称”列宽度为100
     ui->tableWidget->setColumnWidth(4, 80); // 设置“名称”列宽度为100
     ui->tableWidget->setColumnWidth(5, 80); // 设置“名称”列宽度为100
-    ui->tableWidget->setColumnWidth(6, 50);  // 设置“修改”列宽度为50
+    ui->tableWidget->setColumnWidth(6, 80);  // 设置“修改”列宽度为50
     ui->tableWidget->setColumnWidth(7, 50);  // 设置“删除”列宽度为50
+    ui->tableWidget->setColumnWidth(8, 50);
     //查询所有
     QList<Paper> list=db.getAllPapers();
     int row = 0;
@@ -47,7 +49,13 @@ void MainWindow::initTable(){
         ui->tableWidget->insertRow(row);
         ui->tableWidget->setItem(row, 0, new QTableWidgetItem(p.name()));
         ui->tableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(p.total())));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(p.createDate().toString("yyyy-MM-dd hh:mm:ss")));
+        QList<Question> tempSize = db.getAllQuestionsByPaper(p.id());
+        if(tempSize.isEmpty()){
+           ui->tableWidget->setItem(row, 2, new QTableWidgetItem("0"));
+        }else{
+           ui->tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(tempSize.size())));
+        }
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(p.createDate().toString("yyyy-MM-dd hh:mm:ss")));
         //设置列表按钮
         setupButtonsForPaper(ui->tableWidget,row,p,list);
         ++row;
@@ -55,6 +63,7 @@ void MainWindow::initTable(){
     // 设置第 0 列不可编辑
    makeColumnNonEditable(ui->tableWidget, 1);
    makeColumnNonEditable(ui->tableWidget, 2);
+   makeColumnNonEditable(ui->tableWidget, 3);
 
     // 连接 cellChanged 信号 修改第一列
     connect(ui->tableWidget, &QTableWidget::cellChanged, [=](int row, int column) {
@@ -116,11 +125,11 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
     exportPaper->setStyleSheet(buttonStyle);
     deleteButton->setStyleSheet(buttonStyle);
     //添加到表格
-    tableWidget->setCellWidget(row, 3, exam);
-    tableWidget->setCellWidget(row, 4, addQuestion);
-    tableWidget->setCellWidget(row, 5, editQuestion);
-    tableWidget->setCellWidget(row, 6, exportPaper);
-    tableWidget->setCellWidget(row, 7, deleteButton);
+    tableWidget->setCellWidget(row, 4, exam);
+    tableWidget->setCellWidget(row, 5, addQuestion);
+    tableWidget->setCellWidget(row, 6, editQuestion);
+    tableWidget->setCellWidget(row, 7, exportPaper);
+    tableWidget->setCellWidget(row, 8, deleteButton);
     QString pName = p.name();
     //模拟考试
     connect(exam, &QPushButton::clicked, [=]() {
@@ -134,6 +143,8 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
             return;
         }
         SimulatedExam *s = new SimulatedExam(list);
+        connect(s, &SimulatedExam::dialogClosed, this, &MainWindow::refreshTable);
+        s->setPaperId(p.id());
         s->exec();
 
 
@@ -145,6 +156,8 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
             return;
         }
         AddQuestion *aq = new AddQuestion(p.id());
+        // 连接 添加题目 的 dialogClosed 信号到槽函数
+        connect(aq, &AddQuestion::dialogClosed, this, &MainWindow::refreshTable);
         aq->exec();
     });
     //修改试题
@@ -154,6 +167,8 @@ void MainWindow::setupButtonsForPaper(QTableWidget *tableWidget, int row, const 
             return;
         }
         EditQuestion *ed = new EditQuestion(p.id());
+        // 连接 修改题目 的 dialogClosed 信号到槽函数
+        connect(ed, &EditQuestion::dialogClosed, this, &MainWindow::refreshTable);
         ed->exec();
 
     });
@@ -239,11 +254,13 @@ void MainWindow::operateButtons(){
             // 如果成功添加到数据库，则更新表格界面
             ui->tableWidget->insertRow(newRow);
             ui->tableWidget->setItem(newRow, 1, new QTableWidgetItem(QString::number(p.total())));
-            ui->tableWidget->setItem(newRow, 2, new QTableWidgetItem(p.createDate().toString("yyyy-MM-dd hh:mm:ss")));
+            ui->tableWidget->setItem(newRow, 2, new QTableWidgetItem("0"));
+            ui->tableWidget->setItem(newRow, 3, new QTableWidgetItem(p.createDate().toString("yyyy-MM-dd hh:mm:ss")));
             p.setId(id);
             setupButtonsForPaper(ui->tableWidget,newRow,p,db.getAllPapers());
             makeColumnNonEditable(ui->tableWidget, 1);
             makeColumnNonEditable(ui->tableWidget, 2);
+            makeColumnNonEditable(ui->tableWidget, 3);
 
         } else {
             qDebug() << "Failed to add paper to database.";
@@ -305,7 +322,7 @@ void MainWindow::exportForWord(int id){
         paragraph->setProperty("Alignment", 1); // 0 代表 wdAlignParagraphLeft
         font = range->querySubObject("Font");
         font->setProperty("Bold", false);
-        font->setProperty("Size", 13);
+        font->setProperty("Size", fontSize);
         //查询各类型试题
          QList<Question> allList = db.getAllQuestionsByPaper(id);
          //单选
@@ -335,7 +352,7 @@ void MainWindow::exportForWord(int id){
              paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
              font = range->querySubObject("Font");
              font->setProperty("Bold", false);
-             font->setProperty("Size", 13);
+             font->setProperty("Size", fontSize);
              // 插入选择题
              for (int i = 0; i < list.size(); ++i) {
                  paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
@@ -364,7 +381,7 @@ void MainWindow::exportForWord(int id){
              paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
              font = range->querySubObject("Font");
              font->setProperty("Bold", false);
-             font->setProperty("Size", 13);
+             font->setProperty("Size", fontSize);
              // 插入判断题
              for (int i = 0; i < judge.size(); ++i) {
                  paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");
@@ -385,7 +402,7 @@ void MainWindow::exportForWord(int id){
              paragraph->setProperty("Alignment", 0); // 0 代表 wdAlignParagraphLeft
              font = range->querySubObject("Font");
              font->setProperty("Bold", false);
-             font->setProperty("Size", 13);
+             font->setProperty("Size", fontSize);
              // 插入多选择题
              for (int i = 0; i < choice.size(); ++i) {
                  paragraph = content->querySubObject("Paragraphs")->querySubObject("Add()");

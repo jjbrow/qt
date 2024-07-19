@@ -22,10 +22,10 @@ EditQuestion::EditQuestion(int id): QDialog(nullptr),
 void EditQuestion::initTable(){
     ui->tableWidget->setRowCount(0); // 清除现有内容
     //设置表格列
-    ui->tableWidget->setColumnCount(4);
+    ui->tableWidget->setColumnCount(5);
     // 设置表头
     QStringList headers;
-    headers << "题目" << "类型" << "修改"<<"删除";
+    headers << "题目" << "类型"<< "答案" << "修改"<<"删除";
     QHeaderView *header = ui->tableWidget->horizontalHeader();
     //自动宽度
     header->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -48,6 +48,7 @@ void EditQuestion::initTable(){
             typeStr.append("多选");
         }
         ui->tableWidget->setItem(row, 1, new QTableWidgetItem(typeStr));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(p.answer()));
         //设置列表按钮
         setupButtonsForPaper(ui->tableWidget,row,p,list);
         ++row;
@@ -55,6 +56,7 @@ void EditQuestion::initTable(){
     // 设置第 0 列不可编辑
    makeColumnNonEditable(ui->tableWidget, 0);
    makeColumnNonEditable(ui->tableWidget, 1);
+   makeColumnNonEditable(ui->tableWidget, 2);
 }
 //设置第几列不可编辑
 void EditQuestion::makeColumnNonEditable(QTableWidget *tableWidget, int column) {
@@ -93,14 +95,16 @@ void EditQuestion::setupButtonsForPaper(QTableWidget *tableWidget, int row, cons
     editQuestion->setStyleSheet(buttonStyle);
     deleteButton->setStyleSheet(buttonStyle);
     //添加到表格
-    tableWidget->setCellWidget(row, 2, editQuestion);
-    tableWidget->setCellWidget(row, 3, deleteButton);
+    tableWidget->setCellWidget(row, 3, editQuestion);
+    tableWidget->setCellWidget(row, 4, deleteButton);
     QString pName = p.name();
     //修改试题
     connect(editQuestion, &QPushButton::clicked, [=]() {
         //查询试卷
         Question q =db.getQuestion(p.id());
         AddQuestion *aq = new AddQuestion(q);
+        // 连接 添加题目 的 dialogClosed 信号到槽函数
+        connect(aq, &AddQuestion::dialogClosed, this, &EditQuestion::refreshTable);
         aq->exec();
     });
     //删除
@@ -135,3 +139,8 @@ EditQuestion::~EditQuestion()
 {
     delete ui;
 }
+void EditQuestion::closeEvent(QCloseEvent *event) {
+    emit dialogClosed(); // 发射信号
+    QDialog::closeEvent(event); // 调用基类的关闭事件处理
+}
+
